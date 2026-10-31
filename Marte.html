@@ -1,36 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
    <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
        <title>Tu peso en un lugar donde pesas menos</title>
-   </head> 
+   </head>
 <body>
     <h1>Tu peso en otro planeta</h1>
-    <p>En la tierra pesas distinto que en Marte o en Jupiter </p>
+    <p>En la Tierra pesas distinto que en Marte o en Júpiter.</p>
+    <p id="resultado"></p>
 <script>
-    var usuario = prompt("Cual es tu peso?");
-    var planeta = parseInt( prompt("Elige tu planeta/n1 es marte, 2 es jupiter,"));
-    var peso = parseInt(usuario);
+    var usuario = prompt("¿Cuál es tu peso en kilos?");
+    var planeta = parseInt(prompt("Elige tu planeta:\n1 es Marte\n2 es Júpiter"));
+    // parseFloat acepta decimales; replace cambia la coma por punto (60,5 -> 60.5)
+    var peso = parseFloat(String(usuario).replace(",", "."));
     var g_tierra = 9.8;
     var g_marte = 3.7;
-    var g_jupiter= 24.8;
-    var peso_final; 77
-    if (planeta == 1)
+    var g_jupiter = 24.8;
+    var peso_final;
+    var nombre;
+    var resultado = document.getElementById("resultado");
+
+    if (isNaN(peso) || peso <= 0)
     {
-        peso_final = peso * g_marte / g_tierra;
-        nombre = "marte";
+        resultado.textContent = "Escribe un peso válido, por ejemplo 60. Recarga la página para intentarlo otra vez.";
     }
-    else if(planeta == 2)
+    else
     {
-        peso_final = peso * g_jupiter / g_tierra;
-        nombre = "jupíter";
+        if (planeta == 1)
+        {
+            peso_final = peso * g_marte / g_tierra;
+            nombre = "Marte";
+        }
+        else if (planeta == 2)
+        {
+            peso_final = peso * g_jupiter / g_tierra;
+            nombre = "Júpiter";
+        }
+        else
+        {
+            peso_final = 1000000;
+            nombre = "Kriptón";
+        }
+        peso_final = Math.round(peso_final * 10) / 10; // redondea a un decimal
+        resultado.innerHTML = "Tu peso en " + nombre + " es <strong>" + peso_final + " kilos</strong>";
     }
-    else 
-    {
-        peso_final = 1000000;
-        nombre = "kripton";
-    }
-    peso_final = parseInt(peso_final);
-    document.write("Tu peso en "+ nombre + " es <strong>" + peso_final + " kilos</strong>");
-    </script>   
-  </body>
-</html>}
+</script>
+</body>
+</html>

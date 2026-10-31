@@ -1,12 +1,157 @@
-ccd<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>¿Cuánto pesarías en otro planeta?</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 24px 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 22px;
+            line-height: 1.5;
+            color: #ffffff;
+            background: #0b1026;
+        }
+        main {
+            max-width: 560px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 34px;
+            line-height: 1.2;
+            margin-top: 0;
+        }
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+        input,
+        select,
+        button {
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 6px;
+            padding: 12px;
+            font-size: 22px;
+            border-radius: 10px;
+        }
+        input,
+        select {
+            border: 3px solid #ffffff;
+            background: #ffffff;
+            color: #111111;
+        }
+        button {
+            margin-top: 24px;
+            border: none;
+            background: #ff8c42;
+            color: #111111;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover,
+        button:focus {
+            background: #ffb37a;
+        }
+        #resultado {
+            margin-top: 28px;
+            padding: 20px;
+            border: 3px solid #ff8c42;
+            border-radius: 12px;
+            font-size: 26px;
+        }
+        #resultado:empty {
+            display: none;
+        }
+        .nota {
+            font-size: 18px;
+            color: #d6dcff;
+        }
+    </style>
 </head>
 <body>
-    
+    <main>
+        <h1>🪐 ¿Cuánto pesarías en otro planeta?</h1>
+        <p>En cada planeta la fuerza de gravedad es distinta, por eso tu peso cambia.</p>
+
+        <form id="formulario">
+            <label for="peso">Tu peso en la Tierra (kilos)</label>
+            <input type="text" id="peso" inputmode="decimal" placeholder="Por ejemplo: 60" required>
+
+            <label for="planeta">Elige el planeta</label>
+            <select id="planeta">
+                <option value="mercurio">☿️ Mercurio</option>
+                <option value="venus">♀️ Venus</option>
+                <option value="luna">🌙 La Luna</option>
+                <option value="marte" selected>🔴 Marte</option>
+                <option value="jupiter">🟠 Júpiter</option>
+                <option value="saturno">🪐 Saturno</option>
+                <option value="urano">🔵 Urano</option>
+                <option value="neptuno">🔷 Neptuno</option>
+                <option value="kripton">🦸 Kriptón</option>
+            </select>
+
+            <button type="submit">Calcular mi peso</button>
+        </form>
+
+        <p id="resultado" aria-live="polite"></p>
+
+        <p class="nota">Proyecto del Curso de Programación Básica de Platzi, por María Zulay Núñez.</p>
+    </main>
+
+    <script>
+        // Gravedad de cada lugar en metros por segundo al cuadrado (m/s²)
+        var gravedadTierra = 9.8;
+        var planetas = {
+            mercurio: { nombre: "Mercurio", gravedad: 3.7 },
+            venus: { nombre: "Venus", gravedad: 8.87 },
+            luna: { nombre: "la Luna", gravedad: 1.62 },
+            marte: { nombre: "Marte", gravedad: 3.71 },
+            jupiter: { nombre: "Júpiter", gravedad: 24.79 },
+            saturno: { nombre: "Saturno", gravedad: 10.44 },
+            urano: { nombre: "Urano", gravedad: 8.87 },
+            neptuno: { nombre: "Neptuno", gravedad: 11.15 }
+        };
+
+        var formulario = document.getElementById("formulario");
+        var campoPeso = document.getElementById("peso");
+        var campoPlaneta = document.getElementById("planeta");
+        var resultado = document.getElementById("resultado");
+
+        formulario.addEventListener("submit", calcular);
+
+        function calcular(evento) {
+            evento.preventDefault(); // que la página no se recargue
+
+            // Acepta decimales con coma o con punto: 60,5 o 60.5
+            var peso = parseFloat(campoPeso.value.replace(",", "."));
+            if (isNaN(peso) || peso <= 0) {
+                resultado.textContent = "⚠️ Escribe un peso válido, por ejemplo 60.";
+                campoPeso.focus();
+                return;
+            }
+
+            var elegido = campoPlaneta.value;
+
+            // La sorpresa del curso: Kriptón no existe 😉
+            if (elegido === "kripton") {
+                resultado.innerHTML = "🦸 En Kriptón pesarías <strong>1.000.000 de kilos</strong>... " +
+                    "¡menos mal que solo existe en las historietas!";
+                return;
+            }
+
+            var planeta = planetas[elegido];
+            var pesoFinal = peso * planeta.gravedad / gravedadTierra;
+            pesoFinal = Math.round(pesoFinal * 10) / 10; // un decimal
+
+            var comparacion = pesoFinal < peso ? "pesarías menos que en la Tierra" : "pesarías más que en la Tierra";
+            resultado.innerHTML = "En " + planeta.nombre + " pesarías <strong>" +
+                pesoFinal.toLocaleString("es-CO") + " kilos</strong>. " +
+                "¡" + comparacion.charAt(0).toUpperCase() + comparacion.slice(1) + "!";
+        }
+    </script>
 </body>
 </html>
